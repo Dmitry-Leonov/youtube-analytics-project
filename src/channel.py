@@ -24,9 +24,9 @@ class Channel:
         self.description = self.channel_snippet['description']
         # self.url = self.channel_snippet['thumbnails']['default']['url']
         self.url = 'https://www.youtube.com/channel/' + self.__channel_id
-        self.subscriber_count = self.channel_statistics['subscriberCount']
-        self.video_count = self.channel_statistics['videoCount']
-        self.view_count = self.channel_statistics['viewCount']
+        self.subscriber_count = int(self.channel_statistics['subscriberCount'])
+        self.video_count = int(self.channel_statistics['videoCount'])
+        self.view_count = int(self.channel_statistics['viewCount'])
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
@@ -36,7 +36,8 @@ class Channel:
     @property
     def channel_data(self):
         """ Получаем список из данных по API - запросу """
-        channel = youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+        # channel = youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+        channel = build('youtube', 'v3', developerKey=api_key)
         return channel
 
     @classmethod
@@ -56,3 +57,34 @@ class Channel:
         data_dump['viewCount'] = self.view_count
         with open(filename, 'w', encoding='utf-8') as file:
             file.write(json.dumps(data_dump, indent=2, ensure_ascii=False))
+
+    def __str__(self):
+        return f'{self.title} ({self.url})'
+
+    def __add__(self, other):
+        """возвращает общее кол-во подписчиков двух каналов"""
+        return self.subscriber_count + other.subscriber_count
+
+    def __sub__(self, other):
+        """возвращает разницу в подписчиках"""
+        return self.subscriber_count - other.subscriber_count
+
+    def __gt__(self, other):
+        """возвращает булево от сравнения двух каналов self > other"""
+        return self.subscriber_count > other.subscriber_count
+
+    def __ge__(self, other):
+        """возвращает булево от сравнения двух каналов self >= other"""
+        return self.subscriber_count >= other.subscriber_count
+
+    def __lt__(self, other):
+        """возвращает булево от сравнения двух каналов self < other"""
+        return self.subscriber_count < other.subscriber_count
+
+    def __le__(self, other):
+        """возвращает булево от сравнения двух каналов self <= other"""
+        return self.subscriber_count <= other.subscriber_count
+
+    def __eq__(self, other):
+        """возвращает булево от сравнения двух каналов self == other"""
+        return self.subscriber_count == other.subscriber_count
