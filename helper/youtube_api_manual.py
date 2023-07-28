@@ -58,11 +58,11 @@ playlist_videos = youtube.playlistItems().list(playlistId=playlist_id,
                                                part='contentDetails',
                                                maxResults=50,
                                                ).execute()
-# printj(playlist_videos)
+printj(playlist_videos)
 
 # получить все id видеороликов из плейлиста
 video_ids: list[str] = [video['contentDetails']['videoId'] for video in playlist_videos['items']]
-# print(video_ids)
+print(video_ids)
 
 
 '''
