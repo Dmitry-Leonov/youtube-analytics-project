@@ -10,12 +10,15 @@ class Video:
     def __init__(self, video_id):
         """Инициализация по id видео Ютуб"""
         self.video_id = video_id
-        try:
-            self.title: str = self.video_response['items'][0]['snippet']['title']
+        video_response = self.video_response
+
+        if video_response['items']:
+
+            self.title: str = video_response['items'][0]['snippet']['title']
             self.video_url: str = 'https://youtu.be/' + self.video_id
-            self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
-            self.like_count: int = self.video_response['items'][0]['statistics']['likeCount']
-        except:
+            self.view_count: int = video_response['items'][0]['statistics']['viewCount']
+            self.like_count: int = video_response['items'][0]['statistics']['likeCount']
+        else:
             self.title = None
             self.video_url = None
             self.view_count = None
